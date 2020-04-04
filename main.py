@@ -43,7 +43,8 @@ def main():
         for x,y,w,h in faces:
             face = cv2.resize(frame[y:y+h,x:x+w],(64,64)).reshape(1,64,64,3)
             embeddings = model.predict(face)
-            print (score(embeddings))
+            frame = cv2.rectangle(frame,(x,y),(x+w,y+h),(255,255,255),3)
+            frame = cv2.putText(frame,str(score(embeddings)),(x,y-10),cv2.FONT_HERSHEY_SIMPLEX,1,(255,255,255))
 
         cv2.imshow("FRAME",frame)
         if cv2.waitKey(27) & 0xFF == ord('q'):
