@@ -3,3 +3,5 @@ lfw/.ipynb_checkpoints
 lfw/lfw_funneled
 lfw/*.npy
 lfw/*.h5
+*.h5
+*.npy
