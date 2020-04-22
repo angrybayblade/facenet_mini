@@ -25,7 +25,7 @@ def main():
         if key  == ord('q'):
             break
         elif key == ord('s'):
-            cv2.imwrite("./images/user.jpg",img[y:y+h,x:x+h])
+            cv2.imwrite("./images/user.jpg",img[y:y+h,x:x+w])
             break
 
     cap.release()
