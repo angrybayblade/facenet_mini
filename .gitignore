@@ -5,3 +5,4 @@ lfw/*.npy
 lfw/*.h5
 *.h5
 *.npy
+notebooks/images/
