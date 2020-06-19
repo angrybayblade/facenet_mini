@@ -1,19 +1,21 @@
 import numpy as np
-import tensorflow as tf
+import cv2
 
 from tqdm.cli import tqdm
-
+from os import path as pathlib
+from glob import glob
 
 class Pairs(object):
-    def __init__(self,x,y,model=None):
+    def __init__(self,model, x:np.ndarray,y:np.ndarray,image_shape=(110,110,3)):
         assert len(x) == len(y)
         self.x = x.reshape(-1,*x[0].shape[:2],3)
         self.y = y
         self.model = model
         self.dummy = np.array([[0]])
+        self.image_shape = image_shape
         
     def get_pair(self,e,x,y):
-        a = x.reshape(1,110,110,3)
+        a = x.reshape(1,*self.image_shape)
         
         p_index = np.where(self.y == y)
         n_index = np.where(self.y != y)
@@ -24,8 +26,8 @@ class Pairs(object):
         p_dist = np.sum(np.square(p - e),axis=1).argmax()
         n_dist = np.sum(np.square(n - e),axis=1).argmin()
 
-        p = self.x[p_index][p_dist].reshape(1,110,110,3)
-        n = self.x[n_index][n_dist].reshape(1,110,110,3)
+        p = self.x[p_index][p_dist].reshape(1,*self.image_shape)
+        n = self.x[n_index][n_dist].reshape(1,*self.image_shape)
         
         return np.array([a,p,n])
         
@@ -37,31 +39,24 @@ class Pairs(object):
             for a,p,n in this_batch:
                 yield (a,p,n),self.dummy
 
-class Triplet(tf.Module):
-    """
-    Triplet Loss
-    """
-    def __init__(self,margin=.75):
-        self.margin = margin
-        
-    @tf.function
-    def l2(self,x,y):
-        return tf.reduce_sum(tf.square(tf.subtract(x,y)))
-    
-    @tf.function
-    def __call__(self,y_true,y_pred,*args,**kwargs):
-        a,p,n = tf.unstack(tf.reshape(y_pred,(3,-1,d)))
-        
-        Dp = self.l2(a,p)
-        Dn = self.l2(a,n)
-        
-        return tf.nn.relu(Dp - Dn + self.margin)
         
 
 class Dataset(object):
     def __init__(
                 self,
-                path,
-                resize,
+                path:str,
+                resize:int=110,
             ):
-        pass
+        self.path = pathlib.abspath(path) 
+        self.names = glob(f"{self.path}/*/*")
+        
+        self.y = np.array([i.split("/")[-2] for i in self.names])
+        self.x = np.array([
+            cv2.cvtColor(cv2.resize(cv2.imread(i),(resize,resize)),cv2.COLOR_BGR2RGB)
+            for 
+                i
+            in
+                self.names
+        ])
+
+
