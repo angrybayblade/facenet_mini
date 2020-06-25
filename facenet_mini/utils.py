@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 
 from tqdm.cli import tqdm
-from os import path as pathlib
+from os import walk,path as pathlib
 from glob import glob
 
 class Pairs(object):
@@ -41,22 +41,53 @@ class Pairs(object):
 
         
 
+
+
 class Dataset(object):
-    def __init__(
-                self,
-                path:str,
-                resize:int=110,
-            ):
-        self.path = pathlib.abspath(path) 
-        self.names = glob(f"{self.path}/*/*")
+    """
+    Dataset wrapper to read images from folder and structure it.
+    """
+    def __init__(self,path,n_faces,resize=110):
+        self.path = pathlib.abspath(path)
+        self.resize = resize
+
+    def __repr__(self,):
+        return f"Dataset Parser @ {self.path}"
         
-        self.y = np.array([i.split("/")[-2] for i in self.names])
+    def parse(self,progress_bar=True):
+        w = walk(self.path)
+        self.data = np.array([[[r,pathlib.join(r,f_)] for f_ in f] for r,_,f in list(w)[1:]]).reshape(-1,2)
+        self.y = np.array(self.data[:,0])
         self.x = np.array([
-            cv2.cvtColor(cv2.resize(cv2.imread(i),(resize,resize)),cv2.COLOR_BGR2RGB)
+            cv2.cvtColor(
+                cv2.resize(
+                    cv2.imread(
+                        i
+                    ),
+                    (self.resize,self.resize)
+                ),
+                cv2.COLOR_BGR2RGB
+            ) / 255
             for 
                 i
-            in
-                self.names
-        ])
+            in 
+                (tqdm(self.data[:,1]) if progress_bar else self.data[:,1])
+        ]).astype(np.float32)
+        return self
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
