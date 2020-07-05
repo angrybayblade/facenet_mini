@@ -7,3 +7,4 @@ lfw/*.h5
 *.npy
 notebooks/images/
 doc/epoch
+notebooks/checkpoints
