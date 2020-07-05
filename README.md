@@ -9,30 +9,57 @@
     The network takes an image as input and outputs a N-Dimensional Vector (in this implementation 110x110x3 image and 128-D vector) which are used as embeddings for the given image. 
 
 <p align="center">
-    <img src="doc/arch.png" />
+    <img src="doc/arch.PNG" />
 </p>
 
     This paper proposes concept of triplet loss. To understand the loss function let's take an example of three images, where two images are of a same person where one is called as anchor and the other one is calles as positive and a third one is of a different person which is reffered as negative. Objective of this function to reduce the distance between output of anchor and positive image and increase the distance between output of anchor image and negative image.
 
 <p align="center">
-    <img src="doc/triplet.png" />
+    <img src="doc/triplet.PNG" />
 </p>
 
 #### I used custom deep neural network to produce embeddings you can use your own network and customize the number of dimensions as you require. 
 
 ### Training on 50 Faces Mini Batch
 
-> Training Process
+> Training Process For 50 faces 
 
 ![](doc/facenet.gif)
 
-> After 15 epochs.
+> Trained On 100 faces with margin set to 8.
 
 ![](doc/2d_cluster.jpg)
 
 > Testing On Face Images
 
-<img src="doc/test.jpg" width="100%" />
+<!-- <img src="doc/test.jpg" width="100%" /> -->
+
+
+### Traning On Custom Dataset.
+
+> This repo already includes a training script just run with your dataset and it will do the work. For this script to work
+you need the facenet_mini installed on your system or just keep it in the same folder. Also to train the net you need 
+specific folder structure which is as following.
+
+    |_ training_folder
+    |
+    |__ person_0
+    |___ 0.jpg
+    |___ 1.jpg
+    |___ 2.jpg
+    |
+    |__ person_2
+    |___ 2.jpg
+    |___ 6.jpg
+    |___ 7.jpg
+    |
+    |...
+
+> after aranging the folder just run the training script as follows.
+
+```bash
+python3 train.py --path path_to_training_folder --n_faces number_of_faces
+```
 
 
 #### Citations
