@@ -47,7 +47,7 @@
 
 > Testing On Face Images
 
-<!-- <img src="doc/test.jpg" width="100%" /> -->
+<img src="doc/test.jpg" width="100%" />
 
 
 ### Traning On Custom Dataset.
