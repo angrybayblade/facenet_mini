@@ -6,10 +6,8 @@ from os import walk,path as pathlib
 from glob import glob
 
 class Pairs(object):
-    def __init__(self,model,x:np.ndarray,y:np.ndarray,size:int=110):
-        assert len(x) == len(y)
-        self.x = x.reshape(-1,*x[0].shape[:2],3)
-        self.y = y
+    def __init__(self,model,dataset:Dataset,size:int=110):
+        self.dataset = dataset
         self.model = model
         self.dummy = np.array([[0]])
         self.size = size
@@ -17,8 +15,8 @@ class Pairs(object):
     def get_pair(self,e,x,y):
         a = x.reshape(1,self.size,self.size,3)
         
-        p_index = np.where(self.y == y)
-        n_index = np.where(self.y != y)
+        p_index = np.where(self.dataset.y == y)
+        n_index = np.where(self.dataset.y != y)
 
         p = self.epoch_enc[p_index]
         n = self.epoch_enc[n_index]
@@ -26,20 +24,17 @@ class Pairs(object):
         p_dist = np.sum(np.square(p - e),axis=1).argmax()
         n_dist = np.sum(np.square(n - e),axis=1).argmin()
 
-        p = self.x[p_index][p_dist].reshape(1,self.size,self.size,3)
-        n = self.x[n_index][n_dist].reshape(1,self.size,self.size,3)
+        p = self.dataset.x[p_index][p_dist].reshape(1,self.size,self.size,3)
+        n = self.dataset.x[n_index][n_dist].reshape(1,self.size,self.size,3)
         
         return np.array([a,p,n])
         
     def flow(self,epochs=1):
         for epoch in range(epochs):
-            self.epoch_enc = self.model.predict(self.x,batch_size=600)
-            _iter = zip(self.epoch_enc,self.x,self.y)
+            self.epoch_enc = self.model.predict(self.dataset.x,batch_size=600)
+            _iter = zip(self.epoch_enc,self.dataset.x,self.dataset.y)
             for e,x,y in _iter:
                 yield (*self.get_pair(e,x,y),),self.dummy
-
-        
-
 
 
 class Dataset(object):

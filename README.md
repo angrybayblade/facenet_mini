@@ -2,17 +2,27 @@
 
 **This is a simpler and intuative implementation for the original facenet paper by Google ( https://arxiv.org/abs/1503.03832 ).**
 
-    In traditional methods we try to train our model to recognize faces as categories using deep neural nets and minimizes the losses using Softmax and Crossentropy functions but it can get pretty messy at large scale datasets, so this paper introduces a system calles FaceNet, that directly learns a mapping from face images to a compact Euclidean space where distances directly correspond to a measure of face similarity.
+    In traditional methods we try to train our model to recognize faces as categories using deep
+    neural nets and minimizes the losses using Softmax and Crossentropy functions but it can get 
+    pretty messy at large scale datasets, so this paper introduces a system calles FaceNet, that 
+    directly learns a mapping from face images to a compact Euclidean space where distances directly 
+    correspond to a measure of face similarity.
 
-    Once this space has been produced, tasks such as face recognition, verification and clustering can be easily implemented using standard techniques with FaceNet embeddings as feature vectors.
+    Once this space has been produced, tasks such as face recognition, verification and clustering
+    can be easily implemented using standard techniques with FaceNet embeddings as feature vectors.
 
-    The network takes an image as input and outputs a N-Dimensional Vector (in this implementation 110x110x3 image and 128-D vector) which are used as embeddings for the given image. 
+    The network takes an image as input and outputs a N-Dimensional Vector (in this implementation 
+    110x110x3 image and 128-D vector) which are used as embeddings for the given image. 
 
 <p align="center">
     <img src="doc/arch.PNG" />
 </p>
 
-    This paper proposes concept of triplet loss. To understand the loss function let's take an example of three images, where two images are of a same person where one is called as anchor and the other one is calles as positive and a third one is of a different person which is reffered as negative. Objective of this function to reduce the distance between output of anchor and positive image and increase the distance between output of anchor image and negative image.
+    This paper proposes concept of triplet loss. To understand the loss function let's take an 
+    example of three images, where two images are of a same person where one is called as anchor and 
+    the other one is calles as positive and a third one is of a different person which is reffered 
+    as negative. Objective of this function to reduce the distance between output of anchor and 
+    positive image and increase the distance between output of anchor image and negative image.
 
 <p align="center">
     <img src="doc/triplet.PNG" />
@@ -29,6 +39,11 @@
 > Trained On 100 faces with margin set to 8.
 
 ![](doc/2d_cluster.jpg)
+
+
+> Trained On 200 faces with margin set to 8.
+
+![](doc/200_cluster.jpg)
 
 > Testing On Face Images
 
