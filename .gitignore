@@ -8,3 +8,4 @@ lfw/*.h5
 notebooks/images/
 doc/epoch
 notebooks/checkpoints
+ckp/
